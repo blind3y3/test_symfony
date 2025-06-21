@@ -27,6 +27,11 @@ tasks:
     cmd: docker compose exec php composer dump-autoload
   csf:
     cmd: docker compose exec php ./vendor/bin/php-cs-fixer fix
+  migrate:
+    cmd: docker compose exec php bin/console doctrine:migrations:migrate
+  fresh:
+    cmd: docker compose exec php bin/console doctrine:migrations:migrate first
+
   # asset-map:compile
   ams:
     cmds:
