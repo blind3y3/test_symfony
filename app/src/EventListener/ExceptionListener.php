@@ -28,8 +28,7 @@ class ExceptionListener
 
         if ($exception instanceof UniqueConstraintViolationException) {
             $response = new JsonResponse([
-                'error' => $exception->getMessage(),
-                'message' => 'пу-пу-пу, надо доработать на разные типы полей',
+                'message' => 'User with this credentials already exists',
             ]);
             $event->setResponse($response);
 
@@ -37,9 +36,9 @@ class ExceptionListener
         }
 
         $response = new JsonResponse([
+            'message' => 'This error was caught by our custom exception handler',
             'error' => $exception->getMessage(),
             'code' => $exception->getCode(),
-            'message' => 'This error was caught by our custom exception handler',
         ]);
 
         $event->setResponse($response);

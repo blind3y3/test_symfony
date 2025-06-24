@@ -27,6 +27,7 @@ readonly class RegisterService
         $password = $requestData['password'] ?? null;
 
         if ($password) {
+            // @TODO перейти на UserPasswordHasherInterface
             $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
         }
 
@@ -52,6 +53,8 @@ readonly class RegisterService
 
         $this->entityManager->persist($user);
         $this->entityManager->flush();
+
+        // @TODO приветственная смс
 
         return $user;
     }
