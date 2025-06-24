@@ -31,6 +31,8 @@ tasks:
     cmd: docker compose exec php bin/console doctrine:migrations:migrate
   fresh:
     cmd: docker compose exec php bin/console doctrine:migrations:migrate first
+  bash:
+    cmd: docker compose exec php bash
 
   # asset-map:compile
   ams:
