@@ -13,7 +13,7 @@ readonly class SmsNotification
     ) {
     }
 
-    public const  MESSAGE = 'Welcome!';
+    public const MESSAGE = 'Welcome!';
 
     public function getUserId(): int
     {

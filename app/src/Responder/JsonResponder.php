@@ -37,6 +37,7 @@ readonly class JsonResponder
                         'password',
                         'roles',
                         'userIdentifier',
+                        'smsLogs',
                     ],
                 ],
                 [DateTimeNormalizer::FORMAT_KEY => 'Y-m-d H:i:s'],

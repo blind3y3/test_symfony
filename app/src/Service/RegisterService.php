@@ -53,7 +53,7 @@ readonly class RegisterService
                 }
                 $errorsBag[] = [$error->getPropertyPath() => $error->getMessage()];
             }
-            throw new BaseValidationException((string)$errors, $errorsBag);
+            throw new BaseValidationException((string) $errors, $errorsBag);
         }
 
         $this->entityManager->persist($user);
@@ -61,7 +61,7 @@ readonly class RegisterService
 
         $this->messageBus->dispatch(new SmsNotification(
             $user->getId(),
-            SMSNotification::MESSAGE,
+            SmsNotification::MESSAGE,
             $user->getPhone(),
         ));
 
