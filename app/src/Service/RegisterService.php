@@ -7,7 +7,10 @@ namespace App\Service;
 use App\Entity\User;
 use App\Exception\BaseValidationException;
 use App\Factory\UserFactory;
+use App\Message\SmsNotification;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Messenger\Exception\ExceptionInterface;
+use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 readonly class RegisterService
@@ -16,11 +19,13 @@ readonly class RegisterService
         private UserFactory $userFactory,
         private ValidatorInterface $validator,
         private EntityManagerInterface $entityManager,
+        private MessageBusInterface $messageBus,
     ) {
     }
 
     /**
      * @throws BaseValidationException
+     * @throws ExceptionInterface
      */
     public function register(array $requestData): User
     {
@@ -48,13 +53,17 @@ readonly class RegisterService
                 }
                 $errorsBag[] = [$error->getPropertyPath() => $error->getMessage()];
             }
-            throw new BaseValidationException((string) $errors, $errorsBag);
+            throw new BaseValidationException((string)$errors, $errorsBag);
         }
 
         $this->entityManager->persist($user);
         $this->entityManager->flush();
 
-        // @TODO приветственная смс
+        $this->messageBus->dispatch(new SmsNotification(
+            $user->getId(),
+            SMSNotification::MESSAGE,
+            $user->getPhone(),
+        ));
 
         return $user;
     }

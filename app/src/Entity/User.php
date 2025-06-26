@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -40,6 +42,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     #[Assert\NotBlank]
     private ?\DateTimeImmutable $created_at = null;
+
+    /**
+     * @var Collection<int, SmsLog>
+     */
+    #[ORM\OneToMany(targetEntity: SmsLog::class, mappedBy: 'user')]
+    private Collection $smsLogs;
+
+    public function __construct()
+    {
+        $this->smsLogs = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -145,5 +158,35 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getUserIdentifier(): string
     {
         return $this->email;
+    }
+
+    /**
+     * @return Collection<int, SmsLog>
+     */
+    public function getSmsLogs(): Collection
+    {
+        return $this->smsLogs;
+    }
+
+    public function addSmsLog(SmsLog $smsLog): static
+    {
+        if (!$this->smsLogs->contains($smsLog)) {
+            $this->smsLogs->add($smsLog);
+            $smsLog->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSmsLog(SmsLog $smsLog): static
+    {
+        if ($this->smsLogs->removeElement($smsLog)) {
+            // set the owning side to null (unless already changed)
+            if ($smsLog->getUser() === $this) {
+                $smsLog->setUser(null);
+            }
+        }
+
+        return $this;
     }
 }

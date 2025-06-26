@@ -18,6 +18,7 @@ class RegisterController extends AbstractController
     /**
      * @throws BaseValidationException
      * @throws ExceptionInterface
+     * @throws \Symfony\Component\Messenger\Exception\ExceptionInterface
      */
     #[Route('/api/register', methods: ['POST'])]
     public function register(
