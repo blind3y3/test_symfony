@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\EventListener;
 
 use App\Exception\BaseValidationException;
+use App\Exception\EntityNotFoundException;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -35,10 +36,18 @@ class ExceptionListener
             return;
         }
 
+        if ($exception instanceof EntityNotFoundException) {
+            $response = new JsonResponse([
+                'message' => $exception->getMessage(),
+            ]);
+            $event->setResponse($response);
+
+            return;
+        }
+
         $response = new JsonResponse([
-            'message' => 'This error was caught by our custom exception handler',
-            'error' => $exception->getMessage(),
-            'code' => $exception->getCode(),
+            'message' => $exception->getMessage(),
+            'trace' => $exception->getTrace(),
         ]);
 
         $event->setResponse($response);

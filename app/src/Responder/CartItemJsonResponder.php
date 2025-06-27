@@ -8,14 +8,13 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Serializer\Exception\ExceptionInterface;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
-use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
-use Symfony\Component\Serializer\SerializerInterface;
 
-readonly class JsonResponder
+readonly class CartItemJsonResponder
 {
-    public function __construct(private SerializerInterface&NormalizerInterface $serializer)
-    {
+    public function __construct(
+        private NormalizerInterface $normalizer,
+    ) {
     }
 
     /**
@@ -27,22 +26,16 @@ readonly class JsonResponder
         array $headers = [],
         array $context = [],
     ): JsonResponse {
-        $normalized = $this->serializer->normalize(
+        $normalized = $this->normalizer->normalize(
             $data,
             null,
             array_merge(
-                [   // @TODO сделать отдельный респондер со своими скрытыми полями для разных entity?
+                [
                     AbstractNormalizer::IGNORED_ATTRIBUTES => [
-                        'passwordHash',
-                        'password',
-                        'roles',
-                        'userIdentifier',
-                        'smsLogs',
-                        'active',
-                        'cartItems',
+                        'userId',
+                        'productId',
                     ],
                 ],
-                [DateTimeNormalizer::FORMAT_KEY => 'Y-m-d H:i:s'],
                 $context));
 
         return new JsonResponse($normalized, $status, $headers);
