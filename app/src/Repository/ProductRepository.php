@@ -18,17 +18,14 @@ class ProductRepository extends ServiceEntityRepository
         parent::__construct($registry, Product::class);
     }
 
-    /**
-     * @return Product[]
-     */
-    public function get(int $limit = 20): array
+    public function isProductExistsAndActive(int $productId): bool
     {
-        return $this
+        return (bool) $this
             ->createQueryBuilder('p')
-            ->select('p')
-            ->addOrderBy('p.id', 'DESC')
-            ->setMaxResults($limit)
-            ->getQuery()
-            ->getResult();
+            ->where('p.id = :productId')
+            ->setParameter('productId', $productId)
+            ->andWhere('p.is_active = :isActive')
+            ->setParameter('isActive', true)
+            ->getQuery()->getResult();
     }
 }

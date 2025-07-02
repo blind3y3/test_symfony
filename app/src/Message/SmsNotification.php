@@ -7,9 +7,8 @@ namespace App\Message;
 readonly class SmsNotification
 {
     public function __construct(
-        readonly int $userId,
-        readonly string $message,
-        readonly string $phone,
+        private int $userId,
+        private string $message,
     ) {
     }
 
@@ -23,10 +22,5 @@ readonly class SmsNotification
     public function getMessage(): string
     {
         return $this->message;
-    }
-
-    public function getPhone(): string
-    {
-        return $this->phone;
     }
 }

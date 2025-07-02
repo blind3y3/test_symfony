@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\CartItemRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Serializer\Attribute\Ignore;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -13,6 +14,7 @@ class CartItem
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups('api-view')]
     private ?int $id = null;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'cartItems')]
@@ -30,6 +32,7 @@ class CartItem
     #[ORM\Column]
     #[Assert\NotBlank]
     #[Assert\Positive]
+    #[Groups('api-view')]
     private ?int $quantity = null;
 
     public function getId(): ?int

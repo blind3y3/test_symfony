@@ -4,65 +4,37 @@ declare(strict_types=1);
 
 namespace App\Service;
 
+use App\Dto\UserRegisterDto;
 use App\Entity\User;
-use App\Exception\BaseValidationException;
 use App\Factory\UserFactory;
 use App\Message\SmsNotification;
-use Doctrine\ORM\EntityManagerInterface;
+use App\Repository\UserRepository;
 use Symfony\Component\Messenger\Exception\ExceptionInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 readonly class RegisterService
 {
     public function __construct(
         private UserFactory $userFactory,
-        private ValidatorInterface $validator,
-        private EntityManagerInterface $entityManager,
+        private UserRepository $userRepository,
         private MessageBusInterface $messageBus,
+        private UserPasswordHasherInterface $passwordHasher,
     ) {
     }
 
     /**
-     * @throws BaseValidationException
      * @throws ExceptionInterface
      */
-    public function register(array $requestData): User
+    public function register(UserRegisterDto $dto): User
     {
-        $password = $requestData['password'] ?? null;
-
-        if ($password) {
-            // @TODO перейти на UserPasswordHasherInterface
-            $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
-        }
-
         $user = $this->userFactory->create();
-        $user
-            ->setName($requestData['name'] ?? '')
-            ->setPhone($requestData['phone'] ?? '')
-            ->setEmail($requestData['email'] ?? '')
-            ->setPasswordHash($hashedPassword ?? '');
-
-        $errors = $this->validator->validate($user);
-        if (count($errors) > 0) {
-            $errorsBag = [];
-            foreach ($errors as $error) {
-                if ('password_hash' === $error->getPropertyPath()) {
-                    $errorsBag[] = ['password' => $error->getMessage()];
-                    continue;
-                }
-                $errorsBag[] = [$error->getPropertyPath() => $error->getMessage()];
-            }
-            throw new BaseValidationException((string) $errors, $errorsBag);
-        }
-
-        $this->entityManager->persist($user);
-        $this->entityManager->flush();
+        $hashedPassword = $this->passwordHasher->hashPassword($user, $dto->getPassword());
+        $this->userRepository->create($user, $dto, $hashedPassword);
 
         $this->messageBus->dispatch(new SmsNotification(
             $user->getId(),
             SmsNotification::MESSAGE,
-            $user->getPhone(),
         ));
 
         return $user;

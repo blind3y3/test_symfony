@@ -6,6 +6,7 @@ use App\Repository\ProductRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: ProductRepository::class)]
 class Product
@@ -13,12 +14,15 @@ class Product
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups('api-view')]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups('api-view')]
     private ?string $name = null;
 
     #[ORM\Column]
+    #[Groups('api-view')]
     private ?float $price = null;
 
     #[ORM\Column]
@@ -111,7 +115,6 @@ class Product
     public function removeCartItem(CartItem $cartItem): static
     {
         if ($this->cartItems->removeElement($cartItem)) {
-            // set the owning side to null (unless already changed)
             if ($cartItem->getProduct() === $this) {
                 $cartItem->setProduct(null);
             }
@@ -141,7 +144,6 @@ class Product
     public function removeOrderItem(OrderItem $orderItem): static
     {
         if ($this->orderItems->removeElement($orderItem)) {
-            // set the owning side to null (unless already changed)
             if ($orderItem->getProduct() === $this) {
                 $orderItem->setProduct(null);
             }

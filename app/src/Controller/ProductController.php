@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Repository\ProductRepository;
 use App\Responder\JsonResponder;
+use App\Serializer\ProductSerializer;
+use App\Service\ProductService;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Serializer\Exception\ExceptionInterface;
@@ -17,12 +18,12 @@ class ProductController
      */
     #[Route(path: '/api/products', name: 'products_list', methods: ['GET'])]
     public function list(
-        ProductRepository $productRepository,
+        ProductService $productService,
         JsonResponder $responder,
+        ProductSerializer $serializer,
     ): Response {
-        // @TODO стоит ли выносить в сервис?
-        $products = $productRepository->get();
+        $products = $productService->getActiveItems();
 
-        return $responder->respond($products);
+        return $responder->respond($serializer->serializeList($products));
     }
 }

@@ -47,27 +47,6 @@ class Order
     /** Способ доставки - самовывоз */
     final public const DELIVERY_METHOD_PICKUP = 'pickup';
 
-    /** Статус заказа - "Оплачен" */
-    final public const STATUS_PAID = 'paid';
-
-    /** Статус заказа - "Ждет сборки" */
-    final public const STATUS_AWAITING_ASSEMBLY = 'awaiting_assembly';
-
-    /** Статус заказа - "В сборке" */
-    final public const STATUS_IN_ASSEMBLY = 'in_assembly';
-
-    /** Статус заказа - "Готов к выдаче" */
-    final public const STATUS_READY_FOR_DELIVERY = 'ready_for_delivery';
-
-    /** Статус заказа - "Доставляется" */
-    final public const STATUS_DELIVERY_IN_PROGRESS = 'delivery_in_progress';
-
-    /** Статус заказа - "Получен" */
-    final public const STATUS_RECEIVED = 'received';
-
-    /** Статус заказа - "Отменен" */
-    final public const STATUS_CANCELLED = 'cancelled';
-
     public function __construct()
     {
         $this->orderItems = new ArrayCollection();
@@ -155,7 +134,6 @@ class Order
     public function removeOrderItem(OrderItem $orderItem): static
     {
         if ($this->orderItems->removeElement($orderItem)) {
-            // set the owning side to null (unless already changed)
             if ($orderItem->getOrder() === $this) {
                 $orderItem->setOrder(null);
             }
@@ -185,7 +163,6 @@ class Order
     public function removeOrderStatusHistory(OrderStatusHistory $orderStatusHistory): static
     {
         if ($this->orderStatusHistory->removeElement($orderStatusHistory)) {
-            // set the owning side to null (unless already changed)
             if ($orderStatusHistory->getOrder() === $this) {
                 $orderStatusHistory->setOrder(null);
             }

@@ -21,6 +21,6 @@ readonly class SmsNotificationHandler
      */
     public function __invoke(SmsNotification $sms): void
     {
-        $this->repository->create($sms->userId, $sms->message);
+        $this->repository->create($sms->getUserId(), $sms->getMessage());
     }
 }

@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
@@ -17,18 +18,22 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups('api-view')]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank]
+    #[Groups('api-view')]
     private ?string $name = null;
 
     #[ORM\Column(length: 50, unique: true)]
     #[Assert\NotBlank]
+    #[Groups('api-view')]
     private ?string $phone = null;
 
     #[ORM\Column(length: 255, unique: true)]
     #[Assert\NotBlank]
+    #[Groups('api-view')]
     private ?string $email = null;
 
     #[ORM\Column(length: 255)]
@@ -41,6 +46,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column]
     #[Assert\NotBlank]
+    #[Groups('api-view')]
     private ?\DateTimeImmutable $created_at = null;
 
     /**
@@ -195,7 +201,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function removeSmsLog(SmsLog $smsLog): static
     {
         if ($this->smsLogs->removeElement($smsLog)) {
-            // set the owning side to null (unless already changed)
             if ($smsLog->getUser() === $this) {
                 $smsLog->setUser(null);
             }
@@ -225,7 +230,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function removeCartItem(CartItem $cartItem): static
     {
         if ($this->cartItems->removeElement($cartItem)) {
-            // set the owning side to null (unless already changed)
             if ($cartItem->getUser() === $this) {
                 $cartItem->setUser(null);
             }
@@ -255,7 +259,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function removeOrder(Order $order): static
     {
         if ($this->orders->removeElement($order)) {
-            // set the owning side to null (unless already changed)
             if ($order->getUser() === $this) {
                 $order->setUser(null);
             }
