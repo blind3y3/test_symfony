@@ -38,6 +38,10 @@ tasks:
   fixtures:
     cmd: docker compose exec php bin/console doctrine:fixtures:load --append
 
+  #testing
+  tests:
+    cmd: docker compose exec php bin/phpunit --testdox
+
   # asset-map:compile
   ams:
     cmds:
