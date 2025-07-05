@@ -6,6 +6,7 @@ namespace App\Repository;
 
 use App\Dto\CartItemCreateDto;
 use App\Entity\CartItem;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -30,5 +31,23 @@ class CartItemRepository extends ServiceEntityRepository
         $this->registry->getManager()->flush();
 
         return $cartItem;
+    }
+
+    public function isUserHaveAccess(User $user, CartItem $cartItem): bool
+    {
+        return (bool) $this
+            ->createQueryBuilder('ci')
+            ->where('ci.id = :cartItemId')
+            ->setParameter('cartItemId', $cartItem->getId())
+            ->andWhere('ci.user = :user')
+            ->setParameter('user', $user)
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function delete(CartItem $cartItem): void
+    {
+        $this->registry->getManager()->remove($cartItem);
+        $this->registry->getManager()->flush();
     }
 }
