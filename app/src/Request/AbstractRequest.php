@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Request;
 
+use ReflectionClass;
+use ReflectionException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -13,7 +15,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 readonly class AbstractRequest
 {
     /**
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     public function __construct(
         protected ValidatorInterface $validator,
@@ -29,12 +31,12 @@ readonly class AbstractRequest
     }
 
     /**
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     protected function populate(): void
     {
         $request = $this->getRequest();
-        $reflection = new \ReflectionClass($this);
+        $reflection = new ReflectionClass($this);
 
         foreach ($request->toArray() as $property => $value) {
             $attribute = $property;

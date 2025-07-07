@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\OrderStatusHistoryRepository;
+use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: OrderStatusHistoryRepository::class)]
@@ -21,7 +22,7 @@ class OrderStatusHistory
     private ?string $status = null;
 
     #[ORM\Column]
-    private ?\DateTimeImmutable $changed_at = null;
+    private ?DateTimeImmutable $changed_at = null;
 
     public function getId(): ?int
     {
@@ -59,12 +60,12 @@ class OrderStatusHistory
         return $this;
     }
 
-    public function getChangedAt(): ?\DateTimeImmutable
+    public function getChangedAt(): ?DateTimeImmutable
     {
         return $this->changed_at;
     }
 
-    public function setChangedAt(\DateTimeImmutable $changed_at): static
+    public function setChangedAt(DateTimeImmutable $changed_at): static
     {
         $this->changed_at = $changed_at;
 

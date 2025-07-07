@@ -12,6 +12,7 @@ use App\Exception\PickedProductException;
 use App\Factory\OrderFactory;
 use App\Repository\OrderRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 
 readonly class OrderService
 {
@@ -31,7 +32,7 @@ readonly class OrderService
 
     /**
      * @throws CartWrongItemsCountException
-     * @throws \Exception
+     * @throws Exception
      */
     public function create(User $user, string $deliveryMethod): Order
     {
@@ -72,7 +73,7 @@ readonly class OrderService
 
             $this->entityManager->flush();
             $this->entityManager->commit();
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             $this->entityManager->rollback();
             throw $exception;
         }

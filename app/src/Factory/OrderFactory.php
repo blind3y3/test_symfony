@@ -7,6 +7,7 @@ namespace App\Factory;
 use App\DataKeeper\OrderStatus;
 use App\Entity\Order;
 use App\Entity\User;
+use DateTimeImmutable;
 
 class OrderFactory
 {
@@ -16,7 +17,7 @@ class OrderFactory
         $order
             ->setUser($user)
             ->setStatus(OrderStatus::PAID->value)
-            ->setCreatedAt(new \DateTimeImmutable());
+            ->setCreatedAt(new DateTimeImmutable());
 
         return $order;
     }

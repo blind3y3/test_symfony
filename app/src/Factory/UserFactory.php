@@ -6,6 +6,7 @@ namespace App\Factory;
 
 use App\DataKeeper\UserRole;
 use App\Entity\User;
+use DateTimeImmutable;
 
 class UserFactory
 {
@@ -14,7 +15,7 @@ class UserFactory
         $user = new User();
         $user
             ->setRole(UserRole::USER->value)
-            ->setCreatedAt(new \DateTimeImmutable());
+            ->setCreatedAt(new DateTimeImmutable());
 
         return $user;
     }
