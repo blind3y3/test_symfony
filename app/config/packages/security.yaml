@@ -42,6 +42,7 @@ security:
         - { path: ^/api/register,   roles: PUBLIC_ACCESS }
         - { path: ^/api/login,      roles: PUBLIC_ACCESS }
         - { path: ^/api/products,      roles: PUBLIC_ACCESS }
+        - { path: ^/api/delivery-methods,      roles: PUBLIC_ACCESS }
         - { path: ^/api,            roles: IS_AUTHENTICATED_FULLY }
 
 when@test:

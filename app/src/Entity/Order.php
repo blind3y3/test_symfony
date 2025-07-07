@@ -6,6 +6,8 @@ use App\Repository\OrderRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Groups;
+use Symfony\Component\Serializer\Attribute\SerializedName;
 
 #[ORM\Entity(repositoryClass: OrderRepository::class)]
 #[ORM\Table(name: '`order`')]
@@ -14,6 +16,7 @@ class Order
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups('api-view')]
     private ?int $id = null;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'orders')]
@@ -21,12 +24,17 @@ class Order
     private ?User $user = null;
 
     #[ORM\Column(length: 32)]
+    #[Groups('api-view')]
     private ?string $status = null;
 
     #[ORM\Column(length: 128)]
+    #[Groups('api-view')]
+    #[SerializedName('deliveryMethod')]
     private ?string $delivery_method = null;
 
     #[ORM\Column]
+    #[Groups('api-view')]
+    #[SerializedName('createdAt')]
     private ?\DateTimeImmutable $created_at = null;
 
     /**
@@ -46,6 +54,14 @@ class Order
 
     /** Способ доставки - самовывоз */
     final public const DELIVERY_METHOD_PICKUP = 'pickup';
+
+    public static function getDeliveryMethods(): array
+    {
+        return [
+            self::DELIVERY_METHOD_COURIER,
+            self::DELIVERY_METHOD_PICKUP,
+        ];
+    }
 
     public function __construct()
     {
