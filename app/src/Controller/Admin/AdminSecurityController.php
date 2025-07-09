@@ -14,7 +14,7 @@ class AdminSecurityController extends AbstractController
     #[Route('/admin/login', name: 'admin_login')]
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
-        # from https://symfony.com/bundles/EasyAdminBundle/current/dashboards.html#login-form-template
+        // from https://symfony.com/bundles/EasyAdminBundle/current/dashboards.html#login-form-template
         $error = $authenticationUtils->getLastAuthenticationError();
         $lastUsername = $authenticationUtils->getLastUsername();
 
@@ -48,7 +48,6 @@ class AdminSecurityController extends AbstractController
 
             // the 'name' HTML attribute of the <input> used for the password field (default: '_password')
             'password_parameter' => 'password',
-
         ]);
     }
 
