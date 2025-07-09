@@ -64,6 +64,11 @@ class Order
         ];
     }
 
+    public static function getDeliveryMethodsLabels(): array
+    {
+        return array_combine(array_map(fn ($item) => ucfirst($item), self::getDeliveryMethods()), self::getDeliveryMethods());
+    }
+
     public function __construct()
     {
         $this->orderItems = new ArrayCollection();

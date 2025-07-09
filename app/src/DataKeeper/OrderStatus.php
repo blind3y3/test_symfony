@@ -26,4 +26,22 @@ enum OrderStatus: string
 
     /** Статус заказа - "Отменен" */
     case CANCELLED = 'cancelled';
+
+    public static function getLabels(): array
+    {
+        return [
+            self::prepareName(self::PAID->name)                 => self::PAID->value,
+            self::prepareName(self::AWAITING_ASSEMBLY->name)    => self::AWAITING_ASSEMBLY->value,
+            self::prepareName(self::IN_ASSEMBLY->name)          => self::IN_ASSEMBLY->value,
+            self::prepareName(self::READY_FOR_DELIVERY->name)   => self::READY_FOR_DELIVERY->value,
+            self::prepareName(self::DELIVERY_IN_PROGRESS->name) => self::DELIVERY_IN_PROGRESS->value,
+            self::prepareName(self::RECEIVED->name)             => self::RECEIVED->value,
+            self::prepareName(self::CANCELLED->name)            => self::CANCELLED->value,
+        ];
+    }
+
+    private static function prepareName(string $name): string
+    {
+        return str_replace('_', ' ', ucfirst(mb_strtolower($name)));
+    }
 }

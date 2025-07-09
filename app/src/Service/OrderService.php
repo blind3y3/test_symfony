@@ -20,6 +20,7 @@ readonly class OrderService
         private OrderRepository $orderRepository,
         private OrderFactory $orderFactory,
         private EntityManagerInterface $entityManager,
+        private OrderStatusHistoryService $orderStatusHistoryService,
     ) {
     }
 
@@ -48,6 +49,7 @@ readonly class OrderService
             $order = $this->orderFactory->createPaidByUser($user);
             $order->setDeliveryMethod($deliveryMethod);
             $this->orderRepository->save($order);
+            $this->orderStatusHistoryService->updateOrderStatus($order);
 
             foreach ($user->getCartItems() as $cartItem) {
                 if (!$cartItem->getProduct()->isActive()) {

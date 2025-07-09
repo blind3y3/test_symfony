@@ -3,6 +3,7 @@
 $finder = (new PhpCsFixer\Finder())
     ->in(__DIR__)
     ->exclude('var')
+    ->notPath('src/DataKeeper/OrderStatus.php')
 ;
 
 return (new PhpCsFixer\Config())
