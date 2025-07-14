@@ -11,6 +11,7 @@ class UserLoginTest extends BaseWebTestCase
 {
     public function testUserLogin(): void
     {
+        // @TODO проверка авторизации через JWT токен
         $client = static::createClient();
         $userRepository = $this->getContainer()->get(UserRepository::class);
         $user = $userRepository->findOneByEmail('test@test.test');

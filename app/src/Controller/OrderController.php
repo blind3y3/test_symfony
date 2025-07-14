@@ -27,7 +27,7 @@ class OrderController
         OrderSerializer $serializer,
         JsonResponder $responder,
     ): Response {
-        //@TODO status from Request
+        // @TODO status from Request
         $orders = $orderService->getListByUser($user, OrderStatus::PAID->value);
 
         return $responder->respond($serializer->serializeList($orders));
