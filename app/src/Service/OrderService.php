@@ -27,7 +27,6 @@ readonly class OrderService
     /** @return Order[] */
     public function getListByUser(User $user, ?string $status = null, int $limit = 20): array
     {
-        // @TODO по дефолту возвращать только оплаченные или whereIn использовать?
         return $this->orderRepository->findBy(['user' => $user, 'status' => [$status]], ['id' => 'DESC'], $limit);
     }
 
@@ -41,11 +40,11 @@ readonly class OrderService
             throw new CartWrongItemsCountException();
         }
 
-        $this->entityManager->beginTransaction();
-
-        // @TODO логи всех сущностей транзакции?
-
-        try {
+        /** @var Order $order */
+        $order = $this->entityManager->wrapInTransaction(function (EntityManagerInterface $em) use (
+            $user,
+            $deliveryMethod
+        ) {
             $order = $this->orderFactory->createPaidByUser($user);
             $order->setDeliveryMethod($deliveryMethod);
             $this->orderRepository->save($order);
@@ -65,20 +64,18 @@ readonly class OrderService
 
                 $order->addOrderItem($orderItem);
 
-                $this->entityManager->persist($orderItem);
-                $this->entityManager->remove($cartItem);
+                $em->persist($orderItem);
+                $em->remove($cartItem);
             }
 
             if (0 === $order->getOrderItems()->count()) {
                 throw new PickedProductException();
             }
 
-            $this->entityManager->flush();
-            $this->entityManager->commit();
-        } catch (Exception $exception) {
-            $this->entityManager->rollback();
-            throw $exception;
-        }
+            $em->flush();
+
+            return $order;
+        });
 
         return $order;
     }
