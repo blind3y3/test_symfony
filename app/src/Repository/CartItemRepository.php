@@ -4,8 +4,8 @@
 
 namespace App\Repository;
 
-use App\Dto\CartItemCreateDto;
 use App\Entity\CartItem;
+use App\Entity\Product;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -20,11 +20,11 @@ class CartItemRepository extends ServiceEntityRepository
         parent::__construct($registry, CartItem::class);
     }
 
-    public function create(CartItemCreateDto $dto, int $quantity): CartItem
+    public function create(User $user, Product $product, int $quantity): CartItem
     {
         $cartItem = new CartItem();
-        $cartItem->setProduct($dto->getProduct());
-        $cartItem->setUser($dto->getUser());
+        $cartItem->setUser($user);
+        $cartItem->setProduct($product);
         $cartItem->setQuantity($quantity);
 
         $this->registry->getManager()->persist($cartItem);

@@ -4,17 +4,19 @@ declare(strict_types=1);
 
 namespace App\Dto;
 
+use App\Entity\Product;
+
 readonly class CartItemAddDto
 {
     public function __construct(
-        private int $productId,
+        private Product $product,
         private int $quantity,
     ) {
     }
 
-    public function getProductId(): int
+    public function getProduct(): Product
     {
-        return $this->productId;
+        return $this->product;
     }
 
     public function getQuantity(): int

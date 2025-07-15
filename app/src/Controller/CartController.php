@@ -33,11 +33,7 @@ class CartController
         CartItemService $cartItemService,
         CartItemSerializer $serializer,
     ): Response {
-        try {
-            $cartItem = $cartItemService->create($user, $request->toDto());
-        } catch (EntityNotFoundException $e) {
-            return new JsonResponse(['error' => $e->getMessage()], Response::HTTP_NOT_FOUND);
-        }
+        $cartItem = $cartItemService->create($user, $request->toDto());
 
         return $responder->respond($serializer->serialize($cartItem), Response::HTTP_CREATED);
     }

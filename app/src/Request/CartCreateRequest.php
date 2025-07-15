@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Request;
 
 use App\Dto\CartItemAddDto;
+use App\Entity\Product;
 use App\Exception\ProductNotFoundOrNotActiveException;
 use App\Repository\ProductRepository;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -36,12 +37,14 @@ readonly class CartCreateRequest extends AbstractRequest
     /**
      * @throws ProductNotFoundOrNotActiveException
      */
-    private function checkProductExistsAndActive(): void
+    private function tryGetProduct(): Product
     {
-        $isProductExistsAndActive = $this->productRepository->isProductExistsAndActive($this->productId);
-        if (!$isProductExistsAndActive) {
+        $product = $this->productRepository->getActiveProductById($this->productId);
+        if (null === $product) {
             throw new ProductNotFoundOrNotActiveException();
         }
+
+        return $product;
     }
 
     /**
@@ -49,9 +52,8 @@ readonly class CartCreateRequest extends AbstractRequest
      */
     public function toDto(): CartItemAddDto
     {
-        // @TODO Вытащить продукт из репозитория и сразу запихать в dto?
-        $this->checkProductExistsAndActive();
+        $product = $this->tryGetProduct();
 
-        return new CartItemAddDto($this->productId, $this->quantity);
+        return new CartItemAddDto($product, $this->quantity);
     }
 }

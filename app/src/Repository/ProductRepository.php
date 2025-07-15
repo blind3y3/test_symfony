@@ -18,14 +18,8 @@ class ProductRepository extends ServiceEntityRepository
         parent::__construct($registry, Product::class);
     }
 
-    public function isProductExistsAndActive(int $productId): bool
+    public function getActiveProductById(int $productId): ?Product
     {
-        return (bool) $this
-            ->createQueryBuilder('p')
-            ->where('p.id = :productId')
-            ->setParameter('productId', $productId)
-            ->andWhere('p.is_active = :isActive')
-            ->setParameter('isActive', true)
-            ->getQuery()->getResult();
+        return $this->findOneBy(['id' => $productId, 'is_active' => true]);
     }
 }
