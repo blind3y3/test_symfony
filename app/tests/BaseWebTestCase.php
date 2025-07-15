@@ -16,7 +16,7 @@ class BaseWebTestCase extends WebTestCase
         return Kernel::class;
     }
 
-    protected static function getData(KernelBrowser $client): array
+    protected function getData(KernelBrowser $client): array
     {
         return json_decode($client->getResponse()->getContent(), true);
     }
@@ -24,19 +24,10 @@ class BaseWebTestCase extends WebTestCase
     /**
      * @throws Exception
      */
-    protected static function setJWTToken(KernelBrowser $client): KernelBrowser
+    protected function createAuthenticatedClient(): KernelBrowser
     {
-        $token = self::tryGetJWTToken($client);
-        $client->setServerParameter('HTTP_Authorization', sprintf('Bearer %s', $token));
+        $client = static::createClient();
 
-        return $client;
-    }
-
-    /**
-     * @throws Exception
-     */
-    protected static function tryGetJWTToken(KernelBrowser $client): string
-    {
         $client->jsonRequest(
             'POST',
             '/api/login_check',
@@ -48,6 +39,12 @@ class BaseWebTestCase extends WebTestCase
 
         $data = json_decode($client->getResponse()->getContent(), true);
 
-        return $data['token'] ?? throw new Exception('Token not found');
+        if (!array_key_exists('token', $data)) {
+            throw new Exception('Token not found');
+        }
+
+        $client->setServerParameter('HTTP_Authorization', sprintf('Bearer %s', $data['token']));
+
+        return $client;
     }
 }

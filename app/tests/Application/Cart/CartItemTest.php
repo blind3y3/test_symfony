@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Tests\Application\Cart;
 
 use App\Repository\CartItemRepository;
-use App\Repository\UserRepository;
 use App\Tests\BaseWebTestCase;
 use Exception;
 
@@ -16,10 +15,7 @@ class CartItemTest extends BaseWebTestCase
      */
     public function testCartItemAddAndCartItemDelete(): void
     {
-        $client = static::createClient();
-        $userRepository = $this->getContainer()->get(UserRepository::class);
-        $user = $userRepository->findOneByEmail('test@test.test');
-        $client->loginUser($user);
+        $client = $this->createAuthenticatedClient();
 
         $productId = 1;
         $quantity = 2;
@@ -32,7 +28,7 @@ class CartItemTest extends BaseWebTestCase
         $this->assertResponseIsSuccessful();
         $this->assertEquals(201, $client->getResponse()->getStatusCode());
 
-        $data = self::getData($client);
+        $data = $this->getData($client);
         $this->assertArrayHasKey('id', $data);
         $this->assertEquals($quantity, $data['quantity']);
 
@@ -43,14 +39,13 @@ class CartItemTest extends BaseWebTestCase
         $this->assertEquals($productId, $cartItem->getProduct()->getId());
         $this->assertEquals($quantity, $cartItem->getQuantity());
 
-        $client = self::setJWTToken($client);
         $client->jsonRequest('DELETE', '/api/cart', [
             'cartItemId' => $cartItem->getId(),
         ]);
 
         $this->assertResponseIsSuccessful();
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
-        $data = self::getData($client);
+        $data = $this->getData($client);
         $this->assertArrayHasKey('message', $data);
         $this->assertEquals('success', $data['message']);
 

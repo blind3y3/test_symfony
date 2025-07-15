@@ -26,7 +26,7 @@ class UserRegisterTest extends BaseWebTestCase
         $this->assertEquals(201, $client->getResponse()->getStatusCode());
         $this->assertJson($client->getResponse()->getContent());
 
-        $data = self::getData($client);
+        $data = $this->getData($client);
 
         $this->assertArrayHasKey('id', $data);
         $this->assertEquals($testName, $data['name']);
