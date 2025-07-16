@@ -1,10 +1,13 @@
 framework:
-    messenger:
-        transports:
-            doctrine: 'doctrine://default'
+  messenger:
+    transports:
+      doctrine: 'doctrine://default'
+      amqp:
+        dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
 
-        routing:
-            App\Message\SmsNotification: doctrine
+    routing:
+      App\Message\SmsNotification: doctrine
+      App\Message\ReportMessage: amqp
 
 # when@test:
 #    framework:

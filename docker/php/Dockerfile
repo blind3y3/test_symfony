@@ -24,6 +24,8 @@ RUN apt-get update && apt-get -y install --no-install-recommends \
     libzip-dev \
     libicu-dev \
     libonig-dev \
+    librabbitmq-dev \
+    libssl-dev \
     libpq-dev && \
     locale-gen en_US.UTF-8 && \
     localedef -f UTF-8 -i en_US en_US.UTF-8 && \
@@ -35,6 +37,7 @@ RUN apt-get update && apt-get -y install --no-install-recommends \
         pdo \
         pgsql \
         pdo_pgsql && \
+    pecl install amqp && \
     groupadd --gid ${GID} phper && \
     useradd --uid ${UID} --gid ${GID} phper && \
     mkdir /composer && \
@@ -54,7 +57,7 @@ FROM base AS development-xdebug
 
 RUN <<EOF
   pecl install xdebug
-  docker-php-ext-enable xdebug
+  docker-php-ext-enable xdebug amqp
 EOF
 
 COPY docker/php/xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
