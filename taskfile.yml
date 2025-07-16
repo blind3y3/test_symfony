@@ -34,7 +34,7 @@ tasks:
   bash:
     cmd: docker compose exec php bash
   consume:
-    cmd: docker compose exec php bin/console messenger:consume
+    cmd: docker compose exec php bin/console messenger:consume --all
   fixtures:
     cmd: docker compose exec php bin/console doctrine:fixtures:load --append
 

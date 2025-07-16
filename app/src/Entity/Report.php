@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\ReportRepository;
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: ReportRepository::class)]
@@ -19,9 +20,11 @@ class Report
     private ?string $file_path = null;
 
     #[ORM\Column(type: 'uuid')]
+    #[Groups('api-view')]
     private ?Uuid $badge = null;
 
     #[ORM\Column(length: 64)]
+    #[Groups('api-view')]
     private ?string $status = null;
 
     #[ORM\Column]

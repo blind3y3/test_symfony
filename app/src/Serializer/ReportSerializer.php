@@ -20,6 +20,6 @@ readonly class ReportSerializer
      */
     public function serialize(Report $report): string
     {
-        return $this->serializer->serialize($report, 'json');
+        return $this->serializer->serialize($report, 'json', ['groups' => 'api-view']);
     }
 }
