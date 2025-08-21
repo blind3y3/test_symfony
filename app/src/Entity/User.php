@@ -142,9 +142,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->created_at;
     }
 
-    public function setCreatedAt(DateTimeImmutable $created_at): static
+    #[ORM\PrePersist]
+    public function setCreatedAt(?DateTimeImmutable $createdAt = null): static
     {
-        $this->created_at = $created_at;
+        if (null === $this->created_at) {
+            $this->created_at = $createdAt ?? new DateTimeImmutable();
+        }
 
         return $this;
     }
