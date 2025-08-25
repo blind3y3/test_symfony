@@ -25,18 +25,18 @@ RUN apt-get update && apt-get -y install --no-install-recommends \
     libicu-dev \
     libonig-dev \
     librabbitmq-dev \
-    libssl-dev \
-    libpq-dev && \
+    libssl-dev  \
+    && \
     locale-gen en_US.UTF-8 && \
     localedef -f UTF-8 -i en_US en_US.UTF-8 && \
-    docker-php-ext-configure pgsql --with-pgsql=/usr/local/pgsql && \
     docker-php-ext-install \
         intl \
         zip \
         bcmath \
         pdo \
-        pgsql \
-        pdo_pgsql && \
+        mysqli \
+        pdo_mysql \
+    && \
     pecl install amqp && \
     groupadd --gid ${GID} phper && \
     useradd --uid ${UID} --gid ${GID} phper && \

@@ -8,7 +8,6 @@ services:
   App\:
     resource: '../src/'
     exclude:
-      - '../src/DataFixtures/'
       - '../src/DataKeeper/'
       - '../src/Dto/'
       - '../src/Exception/'

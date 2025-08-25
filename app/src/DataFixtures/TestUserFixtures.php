@@ -15,7 +15,7 @@ class TestUserFixtures extends Fixture
         $user = new User();
         $user
             ->setName('Test User')
-            ->setPhone('Test User')
+            ->setPhone('0000')
             ->setEmail('test@test.test')
             ->setPasswordHash(password_hash('test', PASSWORD_BCRYPT))
             ->setRole(UserRole::USER->value)
