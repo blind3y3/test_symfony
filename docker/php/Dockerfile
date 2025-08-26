@@ -16,7 +16,6 @@ ARG GID=1000
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# hadolint ignore=DL3008
 RUN apt-get update && apt-get -y install --no-install-recommends \
     locales \
     git \
@@ -61,5 +60,7 @@ RUN <<EOF
 EOF
 
 COPY docker/php/xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
+
+ENV PHP_IDE_CONFIG 'serverName=debug'
 
 USER phper
